@@ -11,6 +11,10 @@ import java.io.IOException;
 import java.io.Reader;
 
 public class MainServlet extends HttpServlet {
+    private static final String API_POSTS_PATH = "/api/posts";
+    private static final String GET_METHOD = "GET";
+    private static final String POST_METHOD = "POST";
+    private static final String DELETE_METHOD = "DELETE";
     private PostController controller;
 
     @Override
@@ -39,7 +43,7 @@ public class MainServlet extends HttpServlet {
     }
 
     private boolean handleGetAllPosts(String method, String path, HttpServletResponse resp) throws IOException {
-        if (method.equals("GET") && path.equals("/api/posts")) {
+        if (method.equals(GET_METHOD) && path.equals(API_POSTS_PATH)) {
             controller.all(resp);
             return true;
         }
@@ -47,7 +51,7 @@ public class MainServlet extends HttpServlet {
     }
 
     private boolean handleGetPostById(String method, String path, HttpServletResponse resp) throws IOException {
-        if (method.equals("GET") && path.matches("/api/posts/\\d+")) {
+        if (method.equals(GET_METHOD) && path.matches(API_POSTS_PATH + "/\\d+")) {
             final var id = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
             controller.getById(id, resp);
             return true;
@@ -55,8 +59,9 @@ public class MainServlet extends HttpServlet {
         return false;
     }
 
-    private boolean handleSavePost(String method, String path, Reader body, HttpServletResponse resp) throws IOException {
-        if (method.equals("POST") && path.equals("/api/posts")) {
+    private boolean handleSavePost(String method, String path, Reader body, HttpServletResponse resp)
+            throws IOException {
+        if (method.equals(POST_METHOD) && path.equals(API_POSTS_PATH)) {
             controller.save(body, resp);
             return true;
         }
@@ -64,7 +69,7 @@ public class MainServlet extends HttpServlet {
     }
 
     private boolean handleRemovePostById(String method, String path, HttpServletResponse resp) throws IOException {
-        if (method.equals("DELETE") && path.matches("/api/posts/\\d+")) {
+        if (method.equals(DELETE_METHOD) && path.matches(API_POSTS_PATH + "/\\d+")) {
             final var id = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
             controller.removeById(id, resp);
             return true;
